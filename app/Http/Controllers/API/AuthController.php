@@ -119,8 +119,8 @@ class AuthController extends Controller
         try {
 
             // Perform the token deletion
-            $user = User::with(['tickets', 'reply'])
-                ->withCount(['tickets', 'reply'])
+            $user = User::with(['tickets', 'replies'])
+                ->withCount(['tickets', 'replies'])
                 ->findOrFail(auth()->id());
 
 
@@ -128,7 +128,7 @@ class AuthController extends Controller
             Log::channel('tickets')->info('User profile fetched successfully', [
                 'user_id' => $user->id,
                 'ticket_count' => $user->tickets_count, // Use the new count attribute
-                'reply_count' => $user->reply_count, // Use the new count attribute
+                'reply_count' => $user->replies_count, // Use the new count attribute
                 'ip' => $request->ip()
             ]);
 

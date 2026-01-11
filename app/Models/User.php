@@ -10,6 +10,7 @@ use \DateTimeInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -53,6 +54,11 @@ class User extends Authenticatable
     ];
 
     /**
+     * Automatically include this virtual column in JSON responses (Postman).
+     */
+    protected $appends = ['is_admin'];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -70,9 +76,11 @@ class User extends Authenticatable
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function getIsAdminAttribute()
+    protected function isAdmin(): Attribute
     {
-        return $this->roles()->whereIn('id', [2])->exists();
+        return Attribute::make(
+            get: fn() => $this->role === 'admin',
+        );
     }
 
     public function tickets(): HasMany
@@ -80,7 +88,7 @@ class User extends Authenticatable
         return $this->hasMany(Ticket::class);
     }
 
-    public function reply(): HasMany
+    public function replies(): HasMany
     {
         return $this->hasMany(Reply::class);
     }
