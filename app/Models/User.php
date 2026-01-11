@@ -9,11 +9,12 @@ use Illuminate\Notifications\Notifiable;
 use \DateTimeInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes,HasApiTokens;
+    use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +22,7 @@ class User extends Authenticatable
      * @var list<string>
      */
 
-   public $table = 'users';
+    public $table = 'users';
 
     protected $fillable = [
         'name',
@@ -35,7 +36,7 @@ class User extends Authenticatable
         'deleted_at',
     ];
 
-     protected $dates = [
+    protected $dates = [
         'created_at',
         'updated_at',
         'deleted_at',
@@ -64,7 +65,7 @@ class User extends Authenticatable
         ];
     }
 
-     protected function serializeDate(DateTimeInterface $date)
+    protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
     }
@@ -74,4 +75,13 @@ class User extends Authenticatable
         return $this->roles()->whereIn('id', [2])->exists();
     }
 
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+    public function reply(): HasMany
+    {
+        return $this->hasMany(Reply::class);
+    }
 }

@@ -27,6 +27,7 @@ class RegisterRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
             'password' => 'nullable|min:8|confirmed',
+            'role' => 'nullable|in:user,admin',
         ];
     }
 
@@ -43,7 +44,7 @@ class RegisterRequest extends FormRequest
         ];
     }
 
-     protected function failedValidation(Validator $validator)
+    protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
             'status' => 'error',

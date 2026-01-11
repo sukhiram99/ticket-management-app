@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use \DateTimeInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ticket extends Model
 {
@@ -19,7 +20,7 @@ class Ticket extends Model
         'status',
         'seen_user_id',
         'seen_at',
-         'created_at',
+        'created_at',
         'updated_at',
         'deleted_at',
     ];
@@ -30,8 +31,13 @@ class Ticket extends Model
         'deleted_at',
     ];
 
-     protected function serializeDate(DateTimeInterface $date)
+    protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

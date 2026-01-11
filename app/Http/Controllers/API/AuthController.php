@@ -113,4 +113,46 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    public function getProfile(Request $request)
+    {
+        try {
+
+            // Perform the token deletion
+            $user = User::with(['tickets', 'reply'])
+                ->withCount(['tickets', 'reply'])
+                ->findOrFail(auth()->id());
+
+
+            // Log the success to your custom channel
+            Log::channel('tickets')->info('User profile fetched successfully', [
+                'user_id' => $user->id,
+                'ticket_count' => $user->tickets_count, // Use the new count attribute
+                'reply_count' => $user->reply_count, // Use the new count attribute
+                'ip' => $request->ip()
+            ]);
+
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User profile retrieved successfully.',
+                'data' => [
+                    'user' => $user,
+                    'total_tickets' => $user->tickets_count,
+                    'reply_count' => $user->reply_count
+                ]
+            ], 200);
+        } catch (Exception $e) {
+            // Log the specific failure for debugging
+            Log::channel('tickets')->error('User profile fetch failed', [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Could not retrieve profile information.'
+            ], 500);
+        }
+    }
 }

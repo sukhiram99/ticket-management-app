@@ -13,6 +13,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('get-profiles', [AuthController::class, 'getProfile']);
 
     // User tickets
     Route::apiResource('tickets', TicketController::class);
@@ -22,8 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('tickets/{ticket}/replies', [ReplyController::class, 'store']);
 
     // Admin
-    Route::middleware('admin')->group(function () {
-        Route::get('/admin/tickets', [AdminTicketController::class, 'index']);
-        Route::patch('/admin/tickets/{ticket}/status', [AdminTicketController::class, 'updateStatus']);
+    Route::middleware(['admin'])->prefix('admin')->group(function () {
+        Route::get('/tickets', [AdminTicketController::class, 'index']);
+        Route::post('/tickets/{ticket}/status', [AdminTicketController::class, 'updateStatus']);
     });
 });
