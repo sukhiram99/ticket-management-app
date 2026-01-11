@@ -82,6 +82,13 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'tickets' => [
+                'driver' => 'daily',
+                'path' => storage_path('logs/ticket_management_app/tickets.log'),
+                'level' => env('LOG_LEVEL', 'debug'),
+                'days' => 30,
+         ],
+
         'papertrail' => [
             'driver' => 'monolog',
             'level' => env('LOG_LEVEL', 'debug'),
