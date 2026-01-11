@@ -139,7 +139,7 @@ class AuthController extends Controller
                 'data' => [
                     'user' => $user,
                     'total_tickets' => $user->tickets_count,
-                    'reply_count' => $user->reply_count
+                    'reply_count' => $user->replies_count
                 ]
             ], 200);
         } catch (Exception $e) {
